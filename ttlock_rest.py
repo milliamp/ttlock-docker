@@ -53,6 +53,20 @@ def handle_unlock(lock):
     if response.status_code == 200:
         return(response.json())
 
+def handle_lock(lock):  
+    get_token()
+    data = {"clientId": clientId,
+            "accessToken": accessToken,
+            "lockId": lock,
+            "date": current_milli_time()
+        }
+    
+    response = requests.post("https://euapi.ttlock.com/v3/lock/lock", data)
+            
+    if response.status_code == 200:
+        return(response.json())
+
+
 
 def request_lock(lock):
     get_token()    
@@ -63,7 +77,7 @@ def request_lock(lock):
 
 def request_lockStatus(lock):
     get_token()    
-    response = requests.get("https://euapi.ttlock.com/v3/lock//queryOpenState?clientId=" + clientId + "&accessToken=" + accessToken + "&lockId=" + lock + "&date=" + str(current_milli_time()))
+    response = requests.get("https://euapi.ttlock.com/v3/lock/queryOpenState?clientId=" + clientId + "&accessToken=" + accessToken + "&lockId=" + lock + "&date=" + str(current_milli_time()))
          
     if response.status_code == 200:
         return(response.json())
@@ -77,6 +91,10 @@ def hello():
 @app.route("/<lock>/unlock",methods = ['POST', 'GET'])
 def unlock(lock):
     return handle_unlock(lock)
+
+@app.route("/<lock>/lock",methods = ['POST', 'GET'])
+def unlock(lock):
+    return handle_lock(lock)
 
 @app.route("/<lock>/users",methods = ['GET'])
 def users(lock):
